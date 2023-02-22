@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pokédex</title>
+<style>
+body {
+background-color: #F2F2F2;
+font-family: Arial, sans-serif;
+color: #333;
+}
+
+h1 {
+color: #F44336;
+text-align: center;
+}
+
+form {
+display: flex;
+justify-content: center;
+}
+
+label {
+font-size: 1.2rem;
+margin-right: 10px;
+}
+
+input {
+padding: 5px;
+font-size: 1.2rem;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+button {
+padding: 5px 10px;
+font-size: 1.2rem;
+border: none;
+border-radius: 4px;
+background-color: #F44336;
+color: #fff;
+}
+
+.pokemon {
+border: 1px solid #ccc;
+border-radius: 4px;
+padding: 10px;
+margin-top: 10px;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.number {
+color: #F44336;
+font-weight: bold;
+}
+
+.types {
+display: flex;
+justify-content: center;
+margin-top: 10px;
+}
+
+.type {
+padding: 5px 10px;
+margin-right: 10px;
+border-radius: 4px;
+font-size: 1.2rem;
+font-weight: bold;
+text-transform: uppercase;
+}
+
+.type.grass {
+background-color: #8BC34A;
+color: #fff;
+}
+
+.type.fire {
+background-color: #FF5722;
+color: #fff;
+}
+
+.type.water {
+background-color: #2196F3;
+color: #fff;
+}
+
+.abilities {
+margin-top: 10px;
+}
+
+.stats {
+margin-top: 10px;
+}
+
+.stat {
+display: flex;
+justify-content: space-between;
+margin-bottom: 5px;
+}
+
+.name {
+font-weight: bold;
+}
+
+.value {
+color: #F44336;
+}
+</style>
+</head>
+<body>
+<h1>Pokédex</h1>
+<form id="search-form">
+<label for="search-input">Enter a Pokémon name or number:</label>
+<input type="text" id="search-input" name="search-input" required>
+<button type="submit">Search</button>
+</form>
+<div id="result"></div>
+<script>
+const form = document.getElementById("search-form");
+const result = document.getElementById("result");
+
+form.addEventListener("submit", (event) => {
+event.preventDefault();
+const input = document.getElementById("search-input").value;
+fetch(`https://pokeapi.co/api/v2/pokemon/${input}`)
+.then(response => response.json())
+.then(data => {
+const pokemon = {
+name: data.name,
+number: data.id,
+types: data.types.map(t => t.type.name),
+abilities: data.abilities.map(a => a.ability.name),
+stats: Object.fromEntries(data.stats.map(s => [s.stat.name, s.base_stat])),
+
+};
+result.innerHTML = `
